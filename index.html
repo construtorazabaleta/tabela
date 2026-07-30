@@ -101,6 +101,26 @@ tbody tr:hover td{color:var(--gold-light)}
 .unit-num{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:500;color:var(--gold)}
 .price-cell{font-weight:500;color:var(--gold-light);letter-spacing:.02em}
 .tag{display:inline-block;padding:2px 8px;border-radius:2px;font-size:11px;border:1px solid var(--border-gold);color:var(--muted);}
+.selo-decorado{
+  display:inline-block;
+  padding:3px 10px;
+  background:#b8860b;
+  color:#fff;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  border-radius:2px;
+  transform:rotate(-3deg);
+  box-shadow:1px 2px 4px rgba(0,0,0,.4);
+  margin-left:0;
+  margin-right:10px;
+  vertical-align:middle;
+  font-family:'Montserrat',sans-serif;
+  white-space:nowrap;
+  position:relative;
+  top:-2px;
+}
 
 .sub-section{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);}
 .sub-title{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem}
@@ -376,7 +396,7 @@ const EMPREENDIMENTOS = [
       {key:"area",  label:"M²",              type:"text",   placeholder:"Ex: 61,49"},
       {key:"preco", label:"Valor Total (R$)",type:"number", placeholder:"Ex: 745960"},
     ],
-    extras:{vagasGaragem:{label:"Vagas de garagem",items:["S 18","S 19","S 47","S 48","S 50"],precoVaga:70000}}
+    extras:{vagasGaragem:{label:"Vagas de garagem",grupos:[{items:["S 18","S 19"],preco:70000,tipo:"Cobertas"},{items:["S 47","S 48","S 50"],preco:60000,tipo:"Descobertas"}]}}
   },
   {
     id:"tower", label:"Zabaleta Tower", eyebrow:"Comercial",
@@ -391,10 +411,10 @@ const EMPREENDIMENTOS = [
       {key:"preco", label:"Valor Total (R$)",type:"number", placeholder:"Ex: 350304"},
     ],
     extras:{vagasTower:[
-      {ids:"S 254 / S 259",         preco:70000},
-      {ids:"E 266",                  preco:80000},
-      {ids:"C 220 / C 248 / E 275", preco:90000},
-      {ids:"D 163 / D 227 / D 263", preco:110000},
+      {ids:"S 254 / S 259",         preco:70000,  tipo:"Simples"},
+      {ids:"E 266",                  preco:80000,  tipo:"Estendida"},
+      {ids:"C 220 / C 248 / E 275", preco:90000,  tipo:"Confort / Estendida"},
+      {ids:"D 163 / D 227 / D 263", preco:110000, tipo:"Dupla (dois veículos)"},
     ]}
   },
   {
@@ -419,11 +439,12 @@ function defaultData(){
     files:{miguel:[],office:[],tower:[],outros:[]},
     units:{
       miguel:[
-        {id:1,apto:"506",tipo:"3 dorm. (1 suíte)",area:"92,93", vaga:"1 Vaga Dupla",  preco:1077657.14},
-        {id:2,apto:"608",tipo:"2 dorm. (1 suíte)",area:"67,24", vaga:"1 Vaga Simples",preco:930718.83},
-        {id:3,apto:"702",tipo:"3 dorm. (1 suíte)",area:"101,93",vaga:"1 Vaga Dupla",  preco:1331496.79},
-        {id:4,apto:"707",tipo:"2 dorm. (1 suíte)",area:"68,13", vaga:"1 Vaga Simples",preco:790563.37},
-        {id:5,apto:"708",tipo:"2 dorm. (1 suíte)",area:"67,24", vaga:"1 Vaga Simples",preco:780008.45},
+        {id:1,apto:"504",tipo:"2 dorm. (1 suíte)",area:"68,02", vaga:"1 Vaga Simples",preco:857798.58},
+        {id:2,apto:"506",tipo:"3 dorm. (1 suíte)",area:"92,93", vaga:"1 Vaga Dupla",  preco:1077657.14},
+        {id:3,apto:"608",tipo:"2 dorm. (1 suíte)",area:"67,24", vaga:"1 Vaga Simples",preco:930718.83,decorado:true},
+        {id:4,apto:"702",tipo:"3 dorm. (1 suíte)",area:"101,93",vaga:"1 Vaga Dupla",  preco:1331496.79},
+        {id:5,apto:"707",tipo:"2 dorm. (1 suíte)",area:"68,13", vaga:"1 Vaga Simples",preco:790563.37},
+        {id:6,apto:"708",tipo:"2 dorm. (1 suíte)",area:"67,24", vaga:"1 Vaga Simples",preco:780008.45},
       ],
       office:[
         {id:1, sala:"201", area:"61,49",preco:764594.59},{id:2, sala:"202", area:"54,15",preco:863522.11},
@@ -432,7 +453,7 @@ function defaultData(){
         {id:7, sala:"705", area:"24,68",preco:298959.01},{id:8, sala:"708", area:"39,21",preco:478178.94},
         {id:9, sala:"801", area:"61,49",preco:790635.41},{id:10,sala:"802", area:"54,15",preco:696747.45},
         {id:11,sala:"809", area:"31,87",preco:393108.86},{id:12,sala:"810", area:"23,96",preco:281800.06},
-        {id:13,sala:"912", area:"29,47",preco:359959.55},{id:14,sala:"1006",area:"24,85",preco:304846.75},
+        {id:13,sala:"912", area:"29,47",preco:359959.55},
       ],
       tower:[
         {id:1,sala:"418",                   area:"31,17",preco:359054.83},
@@ -441,7 +462,7 @@ function defaultData(){
         {id:4,sala:"724",                   area:"31,13",preco:368938.12},
         {id:5,sala:"818",                   area:"31,17",preco:372864.64},
         {id:6,sala:"823",                   area:"33,12",preco:396191.10},
-        {id:7,sala:"1139",                   area:"25,12",preco:318742.56},
+        
         {id:8,sala:"1214 (planta final 18)",area:"31,17",preco:386674.44},
         {id:9,sala:"1215 (planta final 19)",area:"28,17",preco:358818.91},
       ],
@@ -500,7 +521,7 @@ function renderMain(){
   } else {
     units.forEach(u=>{
       html+=`<tr>`+emp.cols.map(c=>{
-        if(c.style==='unit')   return `<td data-label="${c.label}"><span class="unit-num">${u[c.key]||'—'}</span></td>`;
+        if(c.style==='unit')   return `<td data-label="${c.label}">${u.decorado?'<span class="selo-decorado">Decorado</span>':''}<span class="unit-num">${u[c.key]||'—'}</span></td>`;
         if(c.style==='price')  return `<td data-label="${c.label}" class="price-cell">${fmtPrice(u[c.key]||0)}</td>`;
         if(c.style==='area')   return `<td data-label="${c.label}">${u[c.key]||'—'} m²</td>`;
         if(c.style==='outros') return `<td data-label="${c.label}" style="white-space:pre-line;font-size:13px;line-height:1.6">${u[c.key]||'—'}</td>`;
@@ -523,13 +544,13 @@ function renderMain(){
   if(activeEmp==='office'&&ex.vagasGaragem){
     html+=`<div class="sub-section">
       <div class="sub-title">Vagas de garagem avulsas</div>
-      <table class="vagas-price-table"><tr><td>${ex.vagasGaragem.items.join(' / ')}</td><td>${fmtPrice(ex.vagasGaragem.precoVaga)} cada</td></tr></table>
+      <table class="vagas-price-table">${ex.vagasGaragem.grupos.map(g=>`<tr><td>${g.items.join(' / ')}<span style="font-size:10px;color:var(--muted);margin-left:8px;letter-spacing:.08em;text-transform:uppercase">${g.tipo}</span></td><td>${fmtPrice(g.preco)} cada</td></tr>`).join('')}</table>
     </div>`;
   }
   if(activeEmp==='tower'&&ex.vagasTower){
     html+=`<div class="sub-section">
       <div class="sub-title">Vagas de garagem</div>
-      <table class="vagas-price-table">${ex.vagasTower.map(v=>`<tr><td>${v.ids}</td><td>${fmtPrice(v.preco)}</td></tr>`).join('')}</table>
+      <table class="vagas-price-table">${ex.vagasTower.map(v=>`<tr><td>${v.ids}<span style="font-size:10px;color:var(--muted);margin-left:8px;letter-spacing:.08em;text-transform:uppercase">${v.tipo}</span></td><td>${fmtPrice(v.preco)}</td></tr>`).join('')}</table>
     </div>`;
   }
 
